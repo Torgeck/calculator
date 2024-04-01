@@ -1,0 +1,57 @@
+body {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.display {
+  text-align: right;
+  height: 40px;
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(181, 255, 159),
+    rgb(110, 182, 76)
+  );
+}
+
+.buttons-container {
+  display: flex;
+}
+
+.operands {
+  display: flex;
+  flex-wrap: wrap;
+  width: 65px;
+  background-color: aliceblue;
+}
+
+.numpad {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.row {
+  display: flex;
+}
+
+button {
+  width: 32px;
+  height: 32px;
+  font-weight: 900;
+  text-align: center;
+  background-color: rgb(134, 118, 118);
+  flex-shrink: 0;
+}
+
+._0 {
+  flex-grow: 1;
+}
+
+.equals {
+  flex-grow: 1;
+}
