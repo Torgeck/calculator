@@ -220,6 +220,8 @@ function numberClick(numBtn) {
         : lastNumber + numBtn.textContent;
     display.textContent = lastNumber;
   }
+
+  display.scrollLeft += 80;
 }
 
 function symbolClick(symBtn) {
