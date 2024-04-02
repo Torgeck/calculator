@@ -1,6 +1,7 @@
-let firstNumber = null,
-  lastNumber = null,
-  sign = null;
+let firstNumber = null;
+let lastNumber = null;
+let sign = null;
+
 const digits = 9;
 const rows = 4;
 const arrSymbols = [
@@ -14,7 +15,8 @@ const arrSymbols = [
   { key: ".", value: "dot" },
 ];
 const mapSymbols = new Map(arrSymbols.map((obj) => [obj.key, obj.value]));
-const display = document.querySelector(".display");
+
+const display = document.querySelector(".content");
 const numpad = document.querySelector(".numpad");
 const operands = document.querySelector(".operands");
 
@@ -32,38 +34,106 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-  return b === 0 ? "Dude don't be like that" : a / b;
+  return b !== 0 ? a / b : "Crash Bandicoot";
 }
 
 // Reset function
 function reset() {
-  firstNumber = 0;
-  lastNumber = 0;
-  sign = 0;
+  firstNumber = null;
+  lastNumber = null;
+  sign = null;
+  result = null;
   // clear screen
+  display.textContent = "0";
+  return 0;
+}
+
+function addDot() {
+  const displayContent = display.textContent;
+
+  if (!displayContent.includes(".")) {
+    display.textContent = display.textContent + ".";
+    if (sign != null) {
+      lastNumber += ".";
+    } else {
+      firstNumber += ".";
+    }
+  }
+}
+
+function erase() {
+  if (sign !== null) {
+    if (lastNumber !== null) {
+      lastNumber = lastNumber.slice(0, -1);
+      display.textContent = lastNumber;
+    } else {
+      sign = null;
+      display.textContent = display.textContent.slice(0, -1);
+    }
+  } else if (firstNumber !== null) {
+    firstNumber = firstNumber.slice(0, -1);
+    display.textContent = firstNumber;
+  }
+}
+
+function equals() {
+  if (lastNumber !== null) {
+    firstNumber = operate(firstNumber, lastNumber, sign);
+    lastNumber = null;
+  }
+  sign = null;
+  display.textContent = firstNumber;
 }
 
 function operate(firstNumber, lastNumber, sign) {
+  const firstDigit = Number(firstNumber);
+  const secondDigit = Number(lastNumber);
   let result;
 
   switch (sign) {
     case "+":
-      result = add(firstNumber, lastNumber);
+      result = add(firstDigit, secondDigit);
       break;
     case "-":
-      result = substract(firstNumber, lastNumber);
+      result = substract(firstDigit, secondDigit);
       break;
     case "*":
-      result = multiply(firstNumber, lastNumber);
+      result = multiply(firstDigit, secondDigit);
       break;
     case "/":
-      result = divide(firstNumber, lastNumber);
+      result = divide(firstDigit, secondDigit);
       break;
     default:
       console.log("An invalid sign was entered in function operate");
       break;
   }
   return result;
+}
+
+function addSymbolFunctionality(button, sign) {
+  switch (sign) {
+    case "+":
+    case "-":
+    case "*":
+    case "/":
+      button.addEventListener("click", () => symbolClick(button));
+      break;
+    case "=":
+      button.addEventListener("click", () => equals());
+      break;
+    case ".":
+      button.addEventListener("click", () => addDot());
+      break;
+    case "C":
+      button.addEventListener("click", () => reset());
+      break;
+    case "←":
+      button.addEventListener("click", () => erase());
+      break;
+    default:
+      console.log("An invalid sign was entered in function operate");
+      break;
+  }
 }
 
 function createButton(label) {
@@ -74,6 +144,7 @@ function createButton(label) {
     btn.classList.add(`_${label}`);
     btn.addEventListener("click", () => numberClick(btn));
   } else {
+    addSymbolFunctionality(btn, label);
     btn.classList.add(mapSymbols.get(label));
   }
 
@@ -136,7 +207,7 @@ function fillCalculator() {
 
 function numberClick(numBtn) {
   // Stores the value in firstNumber
-  if (sign != null) {
+  if (sign === null) {
     firstNumber =
       firstNumber === null
         ? numBtn.textContent
@@ -148,6 +219,23 @@ function numberClick(numBtn) {
         ? numBtn.textContent
         : lastNumber + numBtn.textContent;
     display.textContent = lastNumber;
+  }
+}
+
+function symbolClick(symBtn) {
+  let dispContent = display.textContent,
+    btnContent = symBtn.textContent;
+  // Sign isnt null and lastnumber isnt null
+  if (sign !== null && lastNumber !== null) {
+    firstNumber = operate(firstNumber, lastNumber, sign);
+    display.textContent = firstNumber;
+    sign = btnContent;
+    lastNumber = null;
+  } else {
+    display.textContent = dispContent.includes(sign)
+      ? dispContent.replace(sign, btnContent)
+      : dispContent.concat(btnContent);
+    sign = btnContent;
   }
 }
 
