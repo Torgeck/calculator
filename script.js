@@ -37,6 +37,10 @@ function divide(a, b) {
   return b !== 0 ? a / b : "Crash Bandicoot";
 }
 
+function roundResult(result) {
+  return Math.round(result * 100) / 100;
+}
+
 // Reset function
 function reset() {
   firstNumber = null;
@@ -107,7 +111,8 @@ function operate(firstNumber, lastNumber, sign) {
       console.log("An invalid sign was entered in function operate");
       break;
   }
-  return result;
+
+  return roundResult(result);
 }
 
 function addSymbolFunctionality(button, sign) {
