@@ -38,7 +38,7 @@ function divide(a, b) {
 }
 
 function roundResult(result) {
-  return Math.round(result * 100) / 100;
+  return (Math.round(result * 100) / 100).toString();
 }
 
 // Reset function
